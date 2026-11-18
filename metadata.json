@@ -1,0 +1,8 @@
+{
+  "name": "UIC Quotation Manager",
+  "description": "Professional Quotation & Price Book Management System for Universal Inspection Co. Ltd. (UIC), featuring PDF generation with official letterhead, valve & inspection service quoting, Excel/Word export, serial number tracking, and pipeline reporting.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

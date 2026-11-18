@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#111113" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="UIC Quotes" />
+    <meta name="application-name" content="UIC Quotation Manager" />
+    <title>UIC Quotation Manager | Universal Inspection Co. Ltd.</title>
+    <meta name="description" content="Official Desktop Quotation & Price Book Management System for Universal Inspection Co. Ltd. (UIC), featuring PDF generation with official letterhead, valve & inspection service quoting, Excel/Word export, serial number tracking, and pipeline reporting." />
+    <meta property="og:title" content="UIC Quotation Manager | Universal Inspection Co. Ltd." />
+    <meta property="og:description" content="Official Desktop Quotation & Price Book Management System for Universal Inspection Co. Ltd. (UIC), featuring PDF generation with official letterhead, valve & inspection service quoting, Excel/Word export, serial number tracking, and pipeline reporting." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/svg+xml" href="/pwa-icon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+    <script src="./vendor/xlsx.full.min.js"></script>
+    <script src="./vendor/jszip.min.js"></script>
+    <script src="./vendor/jspdf.umd.min.js"></script>
+    <script src="./vendor/jspdf.plugin.autotable.min.js"></script>
+    <script src="./vendor/pdf.min.js"></script>
+    <script>
+      // Fallback in case local vendor scripts are missing
+      if (!window.XLSX) document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"><\/script>');
+      if (!window.JSZip) document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"><\/script>');
+      if (!window.jspdf) document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"><\/script>');
+    </script>
+  </head>
+  <body class="bg-[#111113] text-[#e4e4e7] antialiased selection:bg-[#ff3b30] selection:text-white">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+

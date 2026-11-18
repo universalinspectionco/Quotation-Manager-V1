@@ -1,0 +1,22 @@
+{
+  "appId": "com.uic.quotationmanager",
+  "productName": "UIC Quotation Manager",
+  "copyright": "Copyright © 2026 Universal Inspection Co. Ltd.",
+  "electronVersion": "33.2.0",
+  "directories": {
+    "output": "public/downloads/desktop-release"
+  },
+  "files": [
+    "dist/**/*",
+    "electron/**/*"
+  ],
+  "win": {
+    "target": [
+      {
+        "target": "portable",
+        "arch": ["x64"]
+      }
+    ],
+    "signAndEditExecutable": false
+  }
+}
