@@ -5,6 +5,7 @@ import { cleanKey, todayISO } from './utils/formatters';
 import { Header } from './components/Header';
 import { QuotesList } from './components/QuotesList';
 import { QuoteEditor } from './components/QuoteEditor';
+import type { AiStudioTab } from './components/AiQuoteStudio';
 import { ReportView } from './components/ReportView';
 import { PriceBookView } from './components/PriceBookView';
 import { SettingsView } from './components/SettingsView';
@@ -27,6 +28,7 @@ export default function App() {
   const isOnline = useOnlineStatus();
   const [currentTab, setCurrentTab] = useState<'list' | 'edit' | 'report' | 'book' | 'set'>('list');
   const [editingQuote, setEditingQuote] = useState<Quotation | null>(null);
+  const [initialAiTab, setInitialAiTab] = useState<AiStudioTab | null>(null);
   const [previewQuote, setPreviewQuote] = useState<Quotation | null>(null);
   const [isTypePickerOpen, setIsTypePickerOpen] = useState<boolean>(false);
   const [isShortcutsOpen, setIsShortcutsOpen] = useState<boolean>(false);
@@ -102,7 +104,7 @@ export default function App() {
   }, []);
 
   // Start new quotation of selected type
-  const handleStartNewQuote = (type: QuoteType) => {
+  const handleStartNewQuote = (type: QuoteType, openAiOnTab: AiStudioTab | null = null) => {
     const S = database.set;
     const isValve = type === 'valve';
 
@@ -149,6 +151,7 @@ export default function App() {
       isNew: true,
     };
 
+    setInitialAiTab(openAiOnTab);
     setEditingQuote(newQuote);
     setIsTypePickerOpen(false);
     setCurrentTab('edit');
@@ -158,6 +161,7 @@ export default function App() {
   const handleEditQuote = (id: string) => {
     const found = database.quotes.find((q) => q.id === id);
     if (!found) return;
+    setInitialAiTab(null);
     setEditingQuote(JSON.parse(JSON.stringify(found)));
     setCurrentTab('edit');
   };
@@ -464,6 +468,7 @@ export default function App() {
               onDeleteQuote={handleDeleteQuote}
               onStatusChange={handleStatusChange}
               onNewQuoteClick={() => setIsTypePickerOpen(true)}
+              onNewAiQuoteClick={() => handleStartNewQuote('std', 'rfq')}
               onPreviewPdf={(q) => setPreviewQuote(q)}
               onOpenIntro={() => setIsIntroOpen(true)}
               onOpenImportPastQuotes={() => setIsImportPastQuotesOpen(true)}
@@ -475,11 +480,13 @@ export default function App() {
           {currentTab === 'edit' && editingQuote && (
             <QuoteEditor
               initialQuote={editingQuote}
+              initialAiTab={initialAiTab}
               settings={database.set}
               priceBooks={database.prices}
               onSaveQuote={handleSaveQuote}
               onCancel={() => {
                 setEditingQuote(null);
+                setInitialAiTab(null);
                 setCurrentTab('list');
               }}
               onPreviewPdf={(q) => setPreviewQuote(q)}

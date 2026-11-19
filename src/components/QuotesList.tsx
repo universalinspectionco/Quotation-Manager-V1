@@ -10,7 +10,8 @@ import {
   Trash2, 
   X, 
   AlertCircle,
-  Upload
+  Upload,
+  Sparkles
 } from 'lucide-react';
 import { Quotation, QuoteStatus, Settings } from '../types/quotation';
 import { calculateTotals, formatCurrency, formatDateUK, sanitizeFilename } from '../utils/formatters';
@@ -29,6 +30,7 @@ interface QuotesListProps {
   onDeleteQuote: (id: string) => void;
   onStatusChange: (id: string, newStatus: QuoteStatus) => void;
   onNewQuoteClick: () => void;
+  onNewAiQuoteClick?: () => void;
   onPreviewPdf: (quote: Quotation) => void;
   onOpenIntro?: () => void;
   onOpenImportPastQuotes?: () => void;
@@ -53,6 +55,7 @@ export const QuotesList: React.FC<QuotesListProps> = ({
   onDeleteQuote,
   onStatusChange,
   onNewQuoteClick,
+  onNewAiQuoteClick,
   onPreviewPdf,
   onOpenIntro,
   onOpenImportPastQuotes,
@@ -323,6 +326,18 @@ export const QuotesList: React.FC<QuotesListProps> = ({
                 >
                   {filteredQuotes.length} Records
                 </span>
+
+                {onNewAiQuoteClick && (
+                  <button
+                    type="button"
+                    onClick={onNewAiQuoteClick}
+                    className="flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-mono font-semibold text-blue-800 dark:text-sky-200 bg-sky-500/15 hover:bg-sky-500/25 border border-sky-500/40 rounded-xs transition-colors cursor-pointer"
+                    title="Create a new quotation from RFQ text, PDF, image, or voice dictation using AI"
+                  >
+                    <Sparkles className="w-3 h-3" />
+                    <span>AI Draft Quote</span>
+                  </button>
+                )}
 
                 {onOpenImportPastQuotes && (
                   <button

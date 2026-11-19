@@ -28,6 +28,7 @@ import { ExcelGeneratorService } from '../services/excelGenerator';
 import { PdfGeneratorService } from '../services/pdfGenerator';
 import { WordGeneratorService } from '../services/wordGenerator';
 import { FileStorageService } from '../services/fileStorageService';
+import { AiQuoteStudio, AiStudioTab } from './AiQuoteStudio';
 
 interface QuoteEditorProps {
   initialQuote: Quotation;
@@ -36,6 +37,7 @@ interface QuoteEditorProps {
   onSaveQuote: (quote: Quotation, stayInEditor?: boolean) => void;
   onCancel: () => void;
   onPreviewPdf: (quote: Quotation) => void;
+  initialAiTab?: AiStudioTab | null;
 }
 
 const ALL_STATUSES: QuoteStatus[] = [
@@ -54,13 +56,28 @@ export const QuoteEditor: React.FC<QuoteEditorProps> = ({
   onSaveQuote,
   onCancel,
   onPreviewPdf,
+  initialAiTab = null,
 }) => {
   const [quote, setQuote] = useState<Quotation>({ ...initialQuote });
   const [activeSerialIndex, setActiveSerialIndex] = useState<number | null>(null);
   const [isPriceBookDrawerOpen, setIsPriceBookDrawerOpen] = useState<boolean>(false);
   const [isCtrlSaveModalOpen, setIsCtrlSaveModalOpen] = useState<boolean>(false);
   const [priceBookSearch, setPriceBookSearch] = useState<string>('');
+  const [isAiStudioOpen, setIsAiStudioOpen] = useState<boolean>(Boolean(initialAiTab));
+  const [aiStudioTab, setAiStudioTab] = useState<AiStudioTab>(initialAiTab || 'rfq');
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (initialAiTab) {
+      setAiStudioTab(initialAiTab);
+      setIsAiStudioOpen(true);
+    }
+  }, [initialAiTab]);
+
+  const openAiStudio = (tab: AiStudioTab) => {
+    setAiStudioTab(tab);
+    setIsAiStudioOpen(true);
+  };
 
   const V = quote.type === 'valve';
   const RM = !V && quote.showRm;
@@ -374,40 +391,68 @@ export const QuoteEditor: React.FC<QuoteEditorProps> = ({
           </h2>
         </div>
 
-        {/* Switch Type Toggle */}
-        <div className="flex items-center gap-1 p-1 bg-slate-100/80 rounded-xl border border-slate-200/60 shadow-2xs shrink-0">
+        {/* Mode & AI Studio Controls */}
+        <div className="flex flex-wrap items-center gap-2.5 shrink-0">
           <button
             type="button"
-            onClick={() => setQuote((prev) => ({ ...prev, type: 'std', title: settings.title, tc: settings.tc }))}
-            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all duration-150 cursor-pointer ${
-              !V ? 'bg-white text-blue-950 shadow-xs font-bold' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/50'
+            onClick={() => setIsAiStudioOpen((prev) => !prev)}
+            className={`inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer whitespace-nowrap ${
+              isAiStudioOpen
+                ? 'bg-blue-800 text-white shadow-xs'
+                : 'bg-blue-50 hover:bg-blue-100 text-blue-900 border border-blue-200'
             }`}
           >
-            <Wrench className="w-3.5 h-3.5" />
-            <span>Standard</span>
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>{isAiStudioOpen ? 'Hide AI Studio' : 'AI Quote Studio'}</span>
           </button>
-          <button
-            type="button"
-            onClick={() =>
-              setQuote((prev) => ({
-                ...prev,
-                type: 'valve',
-                title: settings.titleV,
-                sub: settings.subV,
-                tc: settings.tcv,
-                rateNote: settings.rateNote,
-                vatNote: settings.vatNote,
-              }))
-            }
-            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all duration-150 cursor-pointer ${
-              V ? 'bg-white text-blue-950 shadow-xs font-bold' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/50'
-            }`}
-          >
-            <Gauge className="w-3.5 h-3.5" />
-            <span>Valve Testing</span>
-          </button>
+
+          {/* Switch Type Toggle */}
+          <div className="flex items-center gap-1 p-1 bg-slate-100/80 rounded-xl border border-slate-200/60 shadow-2xs shrink-0">
+            <button
+              type="button"
+              onClick={() => setQuote((prev) => ({ ...prev, type: 'std', title: settings.title, tc: settings.tc }))}
+              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all duration-150 cursor-pointer ${
+                !V ? 'bg-white text-blue-950 shadow-xs font-bold' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/50'
+              }`}
+            >
+              <Wrench className="w-3.5 h-3.5" />
+              <span>Standard</span>
+            </button>
+            <button
+              type="button"
+              onClick={() =>
+                setQuote((prev) => ({
+                  ...prev,
+                  type: 'valve',
+                  title: settings.titleV,
+                  sub: settings.subV,
+                  tc: settings.tcv,
+                  rateNote: settings.rateNote,
+                  vatNote: settings.vatNote,
+                }))
+              }
+              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all duration-150 cursor-pointer ${
+                V ? 'bg-white text-blue-950 shadow-xs font-bold' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/50'
+              }`}
+            >
+              <Gauge className="w-3.5 h-3.5" />
+              <span>Valve Testing</span>
+            </button>
+          </div>
         </div>
       </div>
+
+      {/* Expandable AI Quote Creation Studio */}
+      <AiQuoteStudio
+        isOpen={isAiStudioOpen}
+        activeTab={aiStudioTab}
+        onChangeTab={setAiStudioTab}
+        onClose={() => setIsAiStudioOpen(false)}
+        quote={quote}
+        settings={settings}
+        priceBooks={priceBooks}
+        onUpdateQuote={setQuote}
+      />
 
       {/* Header Metadata Section */}
       <div className="glass-panel rounded-2xl border border-slate-200/80 p-5 sm:p-6 shadow-2xs space-y-4">
@@ -719,6 +764,23 @@ export const QuoteEditor: React.FC<QuoteEditorProps> = ({
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={() => openAiStudio('scope')}
+              className="px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-900 border border-blue-200 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5 cursor-pointer"
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>AI Build Scope</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => openAiStudio('polish')}
+              className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold transition-colors cursor-pointer"
+            >
+              AI Polish &amp; Audit
+            </button>
+
             <button
               type="button"
               onClick={handleDownloadTemplate}

@@ -378,19 +378,47 @@
 }
 
 [data-theme="terminal"] .bg-slate-50,
+[data-theme="terminal"] .bg-slate-50\/60,
+[data-theme="terminal"] .bg-slate-50\/70,
+[data-theme="terminal"] .bg-slate-50\/90,
 [data-theme="terminal"] .bg-slate-100,
+[data-theme="terminal"] .bg-slate-100\/80,
 [data-theme="terminal"] .bg-gray-50,
 [data-theme="terminal"] .bg-gray-100,
 [data-theme="terminal"] .bg-zinc-50,
 [data-theme="terminal"] .bg-zinc-100,
 .dark .bg-slate-50,
+.dark .bg-slate-50\/60,
+.dark .bg-slate-50\/70,
+.dark .bg-slate-50\/90,
 .dark .bg-slate-100,
+.dark .bg-slate-100\/80,
 .dark .bg-gray-50,
 .dark .bg-gray-100,
 .dark .bg-zinc-50,
 .dark .bg-zinc-100 {
   background-color: rgba(255, 255, 255, 0.05) !important;
   color: var(--ink, #F4F4F5) !important;
+}
+
+[data-theme="terminal"] .bg-blue-50,
+[data-theme="terminal"] .bg-blue-50\/70,
+.dark .bg-blue-50,
+.dark .bg-blue-50\/70 {
+  background-color: rgba(59, 130, 246, 0.14) !important;
+  color: #DBEAFE !important;
+}
+
+[data-theme="terminal"] .bg-emerald-50\/80,
+.dark .bg-emerald-50\/80 {
+  background-color: rgba(16, 185, 129, 0.14) !important;
+  color: #A7F3D0 !important;
+}
+
+[data-theme="terminal"] .bg-rose-50\/90,
+.dark .bg-rose-50\/90 {
+  background-color: rgba(244, 63, 94, 0.16) !important;
+  color: #FECDD3 !important;
 }
 
 [data-theme="terminal"] .bg-slate-200,
